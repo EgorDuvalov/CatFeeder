@@ -16,7 +16,7 @@ public class UserController {
 	private final UserService userService;
 
 	@PostMapping("/login")
-	public void login(@RequestParam("username") String username) {
-		userService.login(username);
+	public String login(@RequestParam("username") String username) {
+		return userService.login(username);
 	}
 }
