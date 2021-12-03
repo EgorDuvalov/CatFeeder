@@ -30,7 +30,6 @@ public class User {
 	private Role role;
 
 	@OneToMany(cascade = CascadeType.ALL , orphanRemoval = true)
-	@JoinColumn(name = "user_id")
 	private List<Feeder> feeders;
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
