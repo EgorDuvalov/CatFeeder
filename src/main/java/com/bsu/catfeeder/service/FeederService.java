@@ -1,6 +1,7 @@
 package com.bsu.catfeeder.service;
 
 import com.bsu.catfeeder.dto.CreateFeederDto;
+import com.bsu.catfeeder.dto.FeederDTO;
 import com.bsu.catfeeder.dto.ModeratingFeederDto;
 import com.bsu.catfeeder.entity.Feeder;
 import com.bsu.catfeeder.entity.Schedule;
@@ -30,9 +31,11 @@ public class FeederService {
 	private final FeederMapper feederMapper;
 	private final UserService userService;
 
-	public List<Feeder> getFeedersOfUser(Long userId) {
+	public List<FeederDTO> getFeedersOfUser(Long userId) {
 		User owner = userService.retrieveUser(userId);
-		return owner.getFeeders();
+		List<Feeder> feeders = owner.getFeeders();
+
+		return feederMapper.mapToDtoList(feeders);
 	}
 
 	public List<ModeratingFeederDto> getModeratingFeeders() {
@@ -40,11 +43,13 @@ public class FeederService {
 		return feeders.stream().map(ModeratingFeederDto::new).collect(Collectors.toList());
 	}
 
-	public void addFeeder(Long userId, CreateFeederDto dto) {
+	public FeederDTO addFeeder(Long userId, CreateFeederDto dto) {
 		Feeder feeder = feederMapper.mapToEntity(dto);
 		feeder.setUser(userService.retrieveUser(userId));
 		feeder.setStatus(Feeder.Status.MODERATING);
-		feederRepository.save(feeder);
+		feeder = feederRepository.save(feeder);
+
+		return feederMapper.mapToDto(feeder);
 	}
 
 	public void setSchedule(Long userId, Long feederId, Long scheduleId) {

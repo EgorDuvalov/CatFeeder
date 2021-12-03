@@ -1,7 +1,7 @@
 package com.bsu.catfeeder.controller;
 
 import com.bsu.catfeeder.dto.CreateFeederDto;
-import com.bsu.catfeeder.entity.Feeder;
+import com.bsu.catfeeder.dto.FeederDTO;
 import com.bsu.catfeeder.service.FeederService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,13 +26,13 @@ public class FeederController {
 	private final FeederService feederService;
 
 	@GetMapping
-	public List<Feeder> getFeeders(@PathVariable Long userId) {
+	public List<FeederDTO> getFeeders(@PathVariable Long userId) {
 		return feederService.getFeedersOfUser(userId);
 	}
 
 	@PostMapping("/add")
-	public void addFeeder(@PathVariable Long userId, @Valid @RequestBody CreateFeederDto dto) {
-		feederService.addFeeder(userId, dto);
+	public FeederDTO addFeeder(@PathVariable Long userId, @Valid @RequestBody CreateFeederDto dto) {
+		return feederService.addFeeder(userId, dto);
 	}
 
 	@DeleteMapping("/{feederId}")
@@ -42,7 +42,7 @@ public class FeederController {
 
 	@PutMapping("/{feederId}/add-schedule")
 	private void setSchedule(@PathVariable Long userId, @PathVariable Long feederId,
-		@RequestParam(name = "schedule") Long scheduleId) {
+		@RequestParam(name = "scheduleId") Long scheduleId) {
 		feederService.setSchedule(userId, feederId, scheduleId);
 	}
 

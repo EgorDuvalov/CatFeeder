@@ -1,7 +1,7 @@
 package com.bsu.catfeeder.controller;
 
 import com.bsu.catfeeder.dto.CreateScheduleDTO;
-import com.bsu.catfeeder.entity.Schedule;
+import com.bsu.catfeeder.dto.ScheduleDTO;
 import com.bsu.catfeeder.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,13 +24,13 @@ public class ScheduleController {
 	private final ScheduleService scheduleService;
 
 	@GetMapping
-	public List<Schedule> getSchedules(@PathVariable Long userId) {
+	public List<ScheduleDTO> getSchedules(@PathVariable Long userId) {
 		return scheduleService.getSchedules(userId);
 	}
 
 	@PostMapping("/add")
-	public void addSchedule(@PathVariable Long userId, @Valid @RequestBody CreateScheduleDTO dto) {
-		scheduleService.addSchedule(userId, dto);
+	public ScheduleDTO addSchedule(@PathVariable Long userId, @Valid @RequestBody CreateScheduleDTO dto) {
+		return scheduleService.addSchedule(userId, dto);
 	}
 
 	@DeleteMapping("/{scheduleId}")

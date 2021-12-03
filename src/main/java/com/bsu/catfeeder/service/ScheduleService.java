@@ -1,6 +1,7 @@
 package com.bsu.catfeeder.service;
 
 import com.bsu.catfeeder.dto.CreateScheduleDTO;
+import com.bsu.catfeeder.dto.ScheduleDTO;
 import com.bsu.catfeeder.entity.Schedule;
 import com.bsu.catfeeder.entity.User;
 import com.bsu.catfeeder.mapper.ScheduleMapper;
@@ -24,16 +25,19 @@ public class ScheduleService {
 	private final ScheduleMapper scheduleMapper;
 	private final UserService userService;
 
-	public List<Schedule> getSchedules(Long userId) {
+	public List<ScheduleDTO> getSchedules(Long userId) {
 		User owner = userService.retrieveUser(userId);
-		return owner.getSchedules();
+		List<Schedule> schedules = owner.getSchedules();
+
+		return scheduleMapper.mapToDtoList(schedules);
 	}
 
-	public void addSchedule(Long userId, CreateScheduleDTO dto) {
+	public ScheduleDTO addSchedule(Long userId, CreateScheduleDTO dto) {
 		Schedule schedule = scheduleMapper.mapToEntity(dto);
 		schedule.setUser(userService.retrieveUser(userId));
+		schedule = scheduleRepository.save(schedule);
 
-		scheduleRepository.save(schedule);
+		return scheduleMapper.mapToDto(schedule);
 	}
 
 	public void deleteSchedule(Long userId, Long scheduleId) {
