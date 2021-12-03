@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin("http://localhost:8080")
-@RequestMapping("/catFeeder/admin")
+@RequestMapping("/cat-feeder/admin")
 @RequiredArgsConstructor
 public class AdminController {
 	private final FeederService feederService;

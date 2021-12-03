@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin("http://localhost:8080")
-@RequestMapping("/catFeeder")
+@RequestMapping("/cat-feeder")
 @RequiredArgsConstructor
 public class UserController {
 	private final UserService userService;

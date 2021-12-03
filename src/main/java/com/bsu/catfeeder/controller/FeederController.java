@@ -20,14 +20,15 @@ import java.util.List;
 
 @RestController
 @CrossOrigin("http://localhost:8080")
-@RequestMapping("/catFeeder/{userId}/feeders")
+@RequestMapping("/cat-feeder/{userId}/feeders")
 @RequiredArgsConstructor
 public class FeederController {
 	private final FeederService feederService;
 
 	@GetMapping
-	public List<FeederDTO> getFeeders(@PathVariable Long userId) {
-		return feederService.getFeedersOfUser(userId);
+	public List<FeederDTO> getFeeders(@PathVariable(name = "userId") String id) {
+		id = id.substring(1,2);
+		return feederService.getFeedersOfUser(Long.getLong(id));
 	}
 
 	@PostMapping("/add")
