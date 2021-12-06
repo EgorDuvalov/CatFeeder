@@ -33,6 +33,7 @@ public class Feeder {
 
 	private long capacity;
 
+	@Column(name = "load")
 	private long actualLoad;
 
 	@OneToOne(cascade = CascadeType.ALL)
