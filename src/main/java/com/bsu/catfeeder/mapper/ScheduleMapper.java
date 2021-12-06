@@ -4,7 +4,6 @@ import com.bsu.catfeeder.dto.CreateScheduleDTO;
 import com.bsu.catfeeder.dto.ScheduleDTO;
 import com.bsu.catfeeder.entity.Schedule;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import java.util.List;
 

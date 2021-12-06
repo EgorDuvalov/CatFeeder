@@ -26,9 +26,8 @@ public class FeederController {
 	private final FeederService feederService;
 
 	@GetMapping
-	public List<FeederDTO> getFeeders(@PathVariable(name = "userId") String id) {
-		id = id.substring(1,2);
-		return feederService.getFeedersOfUser(Long.getLong(id));
+	public List<FeederDTO> getFeeders(@PathVariable(name = "userId") Long id) {
+		return feederService.getFeedersOfUser(id);
 	}
 
 	@PostMapping("/add")

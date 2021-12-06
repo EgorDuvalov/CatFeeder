@@ -4,7 +4,6 @@ import com.bsu.catfeeder.dto.CreateFeederDto;
 import com.bsu.catfeeder.dto.FeederDTO;
 import com.bsu.catfeeder.dto.ModeratingFeederDto;
 import com.bsu.catfeeder.entity.Feeder;
-import com.bsu.catfeeder.entity.Schedule;
 import com.bsu.catfeeder.entity.User;
 import com.bsu.catfeeder.mapper.FeederMapper;
 import com.bsu.catfeeder.repository.FeederRepository;
