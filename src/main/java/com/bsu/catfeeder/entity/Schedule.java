@@ -19,7 +19,7 @@ import java.time.LocalTime;
 @Table(name = "schedules")
 public class Schedule {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
 	@EqualsAndHashCode.Exclude @ToString.Exclude
