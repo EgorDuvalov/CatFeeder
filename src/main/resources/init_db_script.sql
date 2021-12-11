@@ -7,9 +7,12 @@ create table users
 
 create table schedules
 (
-    id      serial primary key,
-    name    varchar(16) not null,
-    user_id bigint      not null references users (id)
+    id         serial primary key,
+    name       varchar(16) not null,
+    user_id    bigint      not null references users (id),
+    start_time time        not null default '6:00',
+    end_time   time        not null default '22:00',
+    interval   int         not null default 120
 );
 
 create table feeders
