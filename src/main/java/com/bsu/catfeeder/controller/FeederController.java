@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin("http://localhost:8080")
-@RequestMapping("/cat-feeder/{userId}/feeders")
+@RequestMapping("/cat-feeder/{userId}/feeder")
 @RequiredArgsConstructor
 public class FeederController {
 	private final FeederService feederService;
@@ -40,9 +40,9 @@ public class FeederController {
 		feederService.deleteFeeder(userId, feederId);
 	}
 
-	@PutMapping("/{feederId}/add-schedule")
+	@PutMapping("/{feederId}/add-schedule/{scheduleId}")
 	private void setSchedule(@PathVariable Long userId, @PathVariable Long feederId,
-		@RequestParam(name = "scheduleId") Long scheduleId) {
+		@PathVariable Long scheduleId) {
 		feederService.setSchedule(userId, feederId, scheduleId);
 	}
 

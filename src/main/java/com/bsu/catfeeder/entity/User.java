@@ -1,6 +1,8 @@
 package com.bsu.catfeeder.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -28,9 +30,11 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
+	@EqualsAndHashCode.Exclude @ToString.Exclude
 	@OneToMany(cascade = CascadeType.ALL , orphanRemoval = true, mappedBy = "user")
 	private List<Feeder> feeders;
 
+	@EqualsAndHashCode.Exclude @ToString.Exclude
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
 	private List<Schedule> schedules;
 

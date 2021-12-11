@@ -1,6 +1,8 @@
 package com.bsu.catfeeder.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +22,7 @@ public class Schedule {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@EqualsAndHashCode.Exclude @ToString.Exclude
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;

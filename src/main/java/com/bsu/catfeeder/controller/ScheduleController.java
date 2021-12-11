@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin("http://localhost:8080")
-@RequestMapping("/cat-feeder/{userId}/schedules")
+@RequestMapping("/cat-feeder/{userId}/schedule")
 @RequiredArgsConstructor
 public class ScheduleController {
 	private final ScheduleService scheduleService;

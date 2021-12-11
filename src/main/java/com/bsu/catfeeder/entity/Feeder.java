@@ -1,6 +1,8 @@
 package com.bsu.catfeeder.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,6 +25,7 @@ public class Feeder {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@EqualsAndHashCode.Exclude @ToString.Exclude
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
@@ -37,6 +40,7 @@ public class Feeder {
 	@Column(name = "load")
 	private long actualLoad;
 
+	@EqualsAndHashCode.Exclude @ToString.Exclude
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "schedule_id")
 	private Schedule schedule;
