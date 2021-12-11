@@ -15,11 +15,9 @@ public class CreateScheduleDTO {
 	@NotBlank(message = "Name must not be blank")
 	private String name;
 
-	@DateTimeFormat(pattern = "HH:mm")
 	@NotNull(message = "Time of schedule starting must be specified")
 	private LocalTime starts;
 
-	@DateTimeFormat(pattern = "HH:mm")
 	@NotNull(message = "Time of schedule ending must be specified")
 	private LocalTime ends;
 
