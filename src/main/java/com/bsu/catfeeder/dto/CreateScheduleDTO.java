@@ -2,10 +2,10 @@ package com.bsu.catfeeder.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.joda.time.LocalTime;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalTime;
 
 @Getter
 @Setter
