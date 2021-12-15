@@ -41,7 +41,7 @@ public class Feeder {
 	private long actualLoad;
 
 	@EqualsAndHashCode.Exclude @ToString.Exclude
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name = "schedule_id")
 	private Schedule schedule;
 
