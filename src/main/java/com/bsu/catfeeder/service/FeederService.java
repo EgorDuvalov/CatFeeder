@@ -25,28 +25,32 @@ import static java.lang.String.format;
 @Transactional
 @RequiredArgsConstructor
 public class FeederService {
-    private final FeederRepository feederRepository;
-    private final ScheduleService scheduleService;
-    private final FeederMapper feederMapper;
-    private final UserService userService;
-    private final Logger logger;
+	private final FeederRepository feederRepository;
+	private final ScheduleService scheduleService;
+	private final FeederMapper feederMapper;
+	private final UserService userService;
+	private final Logger logger;
 
-    public List<FeederDTO> getFeedersOfUser(Long userId) {
-        User owner = userService.retrieveUser(userId);
-        List<Feeder> feeders = owner.getFeeders();
-        return feederMapper.mapToDtoList(feeders);
-    }
+	public List<FeederDTO> getFeedersOfUser(Long userId) {
+		User owner = userService.retrieveUser(userId);
+		List<Feeder> feeders = owner.getFeeders();
+		return feederMapper.mapToDtoList(feeders);
+	}
 
-    public List<ModeratingFeederDto> getModeratingFeeders() {
-        List<Feeder> feeders = feederRepository.findAllByStatus(Feeder.Status.MODERATING);
-        return feeders.stream().map(ModeratingFeederDto::new).collect(Collectors.toList());
-    }
+	public List<ModeratingFeederDto> getModeratingFeeders() {
+		List<Feeder> feeders = feederRepository.findAllByStatus(Feeder.Status.MODERATING);
+		return feeders
+			.stream()
+			.map(ModeratingFeederDto::new)
+			.collect(Collectors.toList());
+	}
 
     public FeederDTO addFeeder(Long userId, CreateFeederDto dto) {
         Feeder feeder = feederMapper.mapToEntity(dto);
         feeder.setUser(userService.retrieveUser(userId));
         feeder.setStatus(Feeder.Status.MODERATING);
         feeder = feederRepository.save(feeder);
+
         logger.info("Feeder" + feeder + "is moderating" + ", user id " + userId);
         return feederMapper.mapToDto(feeder);
     }
@@ -55,15 +59,18 @@ public class FeederService {
         userService.retrieveUser(userId);
         Feeder feeder = retrieveFeeder(feederId);
         feeder.setSchedule(scheduleService.retrieveSchedule(scheduleId));
-        logger.info("Schedule "+scheduleId+" is set for feeder" + feederId);
+
+        logger.info(format("Schedule %d is set to feeder %d", scheduleId, feederId));
         feederRepository.save(feeder);
     }
 
     public void activateFeeder(Long userId, Long feederId) {
         userService.retrieveUser(userId);//Just to check that user exists
+
         Feeder feeder = retrieveFeeder(feederId);
         checkBeforeActivation(feeder);
         feeder.setActive(true);
+
         logger.info("Feeder" + feederId + "is now active for user" + userId);
         feederRepository.save(feeder);
     }
