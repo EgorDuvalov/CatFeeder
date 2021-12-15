@@ -8,13 +8,13 @@ import com.bsu.catfeeder.entity.User;
 import com.bsu.catfeeder.mapper.FeederMapper;
 import com.bsu.catfeeder.repository.FeederRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -55,12 +55,12 @@ public class FeederService {
         userService.retrieveUser(userId);
         Feeder feeder = retrieveFeeder(feederId);
         feeder.setSchedule(scheduleService.retrieveSchedule(scheduleId));
+        logger.info("Schedule "+scheduleId+" is set for feeder" + feederId);
         feederRepository.save(feeder);
     }
 
     public void activateFeeder(Long userId, Long feederId) {
         userService.retrieveUser(userId);//Just to check that user exists
-
         Feeder feeder = retrieveFeeder(feederId);
         checkBeforeActivation(feeder);
         feeder.setActive(true);
@@ -70,23 +70,27 @@ public class FeederService {
 
     private void checkBeforeActivation(Feeder feeder) {
         if (!feeder.getStatus().equals(Feeder.Status.ACCEPTED)) {
-            throw new ResponseStatusException(
+            ResponseStatusException e = new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Feeder should be accepted by admin before getting activated");
+            logger.warn("Arrogant try to use feeder "+ feeder.getId() + "\n" + Arrays.toString(e.getStackTrace()));
+            throw e;
         }
         if (!feeder.getType().equals(Feeder.Type.TIMER)) {
             if (feeder.getSchedule() == null) {
-                throw new ResponseStatusException(
+                ResponseStatusException e = new ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
                         "Timer-based feeder requires schedule before getting activated");
+                logger.warn("Arrogant try to use timer-based feeder "+ feeder.getId() + "\n" + Arrays.toString(e.getStackTrace()));
+                throw e;
             }
         }
     }
 
     public void deleteFeeder(Long userId, Long feederId) {
-        userService.retrieveUser(userId);//Just to check that user exists
+        userService.retrieveUser(userId);;//Just to check that user exists
         retrieveFeeder(feederId); //Just to check feeder exists
-
+        logger.info("User "+ feederId + " successfully deleted feeder" + feederId);
         feederRepository.deleteById(feederId);
     }
 
@@ -100,6 +104,7 @@ public class FeederService {
                 Feeder toUpdate = feeder.get();
                 toUpdate.setStatus(moderated.getStatus());
                 feederRepository.save(toUpdate);
+                logger.info("Feeder "+ toUpdate.getId() + " changed his status to "+ moderated.getStatus());
             }
         }
     }
@@ -107,11 +112,12 @@ public class FeederService {
     private Feeder retrieveFeeder(Long id) {
         Optional<Feeder> feeder = feederRepository.findById(id);
         if (feeder.isEmpty()) {
-            throw new ResponseStatusException(
+            ResponseStatusException e = new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     format("Feeder with id %d is not found", id));
+            logger.warn("Retrieve failed for feeder "+ id + "\n" + Arrays.toString(e.getStackTrace()));
+            throw e;
         }
-
         return feeder.get();
     }
 }
