@@ -1,9 +1,11 @@
 package com.bsu.catfeeder.controller;
 
 import com.bsu.catfeeder.dto.CreateUserDTO;
+import com.bsu.catfeeder.dto.LogDto;
 import com.bsu.catfeeder.dto.ModeratingFeederDto;
 import com.bsu.catfeeder.entity.User;
 import com.bsu.catfeeder.service.FeederService;
+import com.bsu.catfeeder.service.LogService;
 import com.bsu.catfeeder.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,31 +27,36 @@ import java.util.List;
 @RequestMapping("/cat-feeder/admin")
 @RequiredArgsConstructor
 public class AdminController {
-	private final FeederService feederService;
-	private final UserService userService;
+    private final FeederService feederService;
+    private final UserService userService;
+    private final LogService logService;
 
-	@GetMapping("/moderating-feeders")
-	public List<ModeratingFeederDto> getModeratingFeeders() {
-		return feederService.getModeratingFeeders();
-	}
+    @GetMapping("/moderating-feeders")
+    public List<ModeratingFeederDto> getModeratingFeeders() {
+        return feederService.getModeratingFeeders();
+    }
 
-	@PutMapping("/moderating-feeders/save")
-	public void updateModeratingFeeders(@Valid @RequestParam(name = "moderated") List<ModeratingFeederDto> moderatedFeeders) {
-		feederService.updateFeedersStatuses(moderatedFeeders);
-	}
+    @PutMapping("/moderating-feeders/save")
+    public void updateModeratingFeeders(@Valid @RequestParam(name = "moderated") List<ModeratingFeederDto> moderatedFeeders) {
+        feederService.updateFeedersStatuses(moderatedFeeders);
+    }
+    @GetMapping("/logs")
+    public List<LogDto> getLogs() {
+        return logService.getAllLogs();
+    }
 
-	@GetMapping("/users")
-	public List<User> getALlUsers() {
-		return userService.getUsers();
-	}
+    @GetMapping("/users")
+    public List<User> getALlUsers() {
+        return userService.getUsers();
+    }
 
-	@PostMapping("/users/add")
-	public void addUser(@Valid @RequestBody CreateUserDTO dto) {
-		userService.addUser(dto);
-	}
+    @PostMapping("/users/add")
+    public void addUser(@Valid @RequestBody CreateUserDTO dto) {
+        userService.addUser(dto);
+    }
 
-	@DeleteMapping("/users/{id}")
-	public void deleteUser(@PathVariable Long id) {
-		userService.deleteUser(id);
-	}
+    @DeleteMapping("/users/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+    }
 }
