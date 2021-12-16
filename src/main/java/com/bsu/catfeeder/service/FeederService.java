@@ -25,17 +25,17 @@ import static java.lang.String.format;
 @Transactional
 @RequiredArgsConstructor
 public class FeederService {
-	private final FeederRepository feederRepository;
-	private final ScheduleService scheduleService;
-	private final FeederMapper feederMapper;
-	private final UserService userService;
-	private final Logger logger;
+    private final FeederRepository feederRepository;
+    private final ScheduleService scheduleService;
+    private final FeederMapper feederMapper;
+    private final UserService userService;
+    private final Logger logger;
 
-	public List<FeederDTO> getFeedersOfUser(Long userId) {
-		User owner = userService.retrieveUser(userId);
-		List<Feeder> feeders = owner.getFeeders();
-		return feederMapper.mapToDtoList(feeders);
-	}
+    public List<FeederDTO> getFeedersOfUser(Long userId) {
+        User owner = userService.retrieveUser(userId);
+        List<Feeder> feeders = owner.getFeeders();
+        return feederMapper.mapToDtoList(feeders);
+    }
 
 	public List<ModeratingFeederDto> getModeratingFeeders() {
 		List<Feeder> feeders = feederRepository.findAllByStatus(Feeder.Status.MODERATING);
@@ -59,14 +59,12 @@ public class FeederService {
         userService.retrieveUser(userId);
         Feeder feeder = retrieveFeeder(feederId);
         feeder.setSchedule(scheduleService.retrieveSchedule(scheduleId));
-
-        logger.info(format("Schedule %d is set to feeder %d", scheduleId, feederId));
+        logger.info("Schedule " + scheduleId + " is set for feeder" + feederId);
         feederRepository.save(feeder);
     }
 
     public void activateFeeder(Long userId, Long feederId) {
-        userService.retrieveUser(userId);//Just to check that user exists
-
+        userService.retrieveUser(userId);
         Feeder feeder = retrieveFeeder(feederId);
         checkBeforeActivation(feeder);
         feeder.setActive(true);
@@ -95,8 +93,8 @@ public class FeederService {
     }
 
     public void deleteFeeder(Long userId, Long feederId) {
-        userService.retrieveUser(userId);;//Just to check that user exists
-        retrieveFeeder(feederId); //Just to check feeder exists
+        userService.retrieveUser(userId);
+        retrieveFeeder(feederId);
         logger.info("User "+ feederId + " successfully deleted feeder" + feederId);
         feederRepository.deleteById(feederId);
     }
