@@ -59,12 +59,12 @@ public class FeederService {
 		feederRepository.save(feeder);
 	}
 
-	public void activateFeeder(Long userId, Long feederId) {
+	public void activateFeeder(Long userId, Long feederId, boolean isActivated) {
 		userService.retrieveUser(userId);//Just to check that user exists
 
 		Feeder feeder = retrieveFeeder(feederId);
 		checkBeforeActivation(feeder);
-		feeder.setActive(true);
+		feeder.setActive(isActivated);
 
 		feederRepository.save(feeder);
 	}

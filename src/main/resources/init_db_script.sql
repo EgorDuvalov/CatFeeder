@@ -27,3 +27,10 @@ create table feeders
     user_id     bigint      not null references users (id),
     schedule_id bigint references schedules (id)
 );
+
+create table logs
+(
+    id serial primary key,
+    creation_time timestamp with time zone not null default LOCALTIMESTAMP,
+    message varchar(200) not null
+);
