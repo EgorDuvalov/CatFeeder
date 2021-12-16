@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d [%thread] %-5level %-50logger{40} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="LogFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>target/log/application-log.log</file>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M\(%line\)
+                - %msg%n
+            </pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>info-log-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>1MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>10MB</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="LogFileAppender" />
+        <appender-ref ref="Console" />
+    </root>
+</configuration>
