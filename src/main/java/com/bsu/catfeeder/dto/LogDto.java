@@ -8,6 +8,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class LogDto {
-    private LocalDateTime timeOfCreation;
+    private LocalDateTime creationTime;
     private String message;
 }

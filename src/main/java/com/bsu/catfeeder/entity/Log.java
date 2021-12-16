@@ -22,7 +22,7 @@ public class Log {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "creation_time")
-    private LocalDateTime timeOfCreating;
+    private LocalDateTime creationTime;
     @Column(name = "message")
     private String message;
 }
