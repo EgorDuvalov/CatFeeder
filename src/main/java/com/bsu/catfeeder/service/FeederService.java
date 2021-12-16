@@ -1,5 +1,6 @@
 package com.bsu.catfeeder.service;
 
+import com.bsu.catfeeder.annotation.LogMe;
 import com.bsu.catfeeder.dto.CreateFeederDto;
 import com.bsu.catfeeder.dto.FeederDTO;
 import com.bsu.catfeeder.dto.ModeratingFeederDto;
@@ -84,6 +85,7 @@ public class FeederService {
 		}
 	}
 
+	@LogMe
 	public void deleteFeeder(Long userId, Long feederId) {
 		userService.retrieveUser(userId);//Just to check that user exists
 		retrieveFeeder(feederId); //Just to check feeder exists

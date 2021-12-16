@@ -1,6 +1,5 @@
 package com.bsu.catfeeder.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +14,6 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @Table(name = "logs")
-@AllArgsConstructor
 @NoArgsConstructor
 public class Log {
     @Id
@@ -25,4 +23,9 @@ public class Log {
     private LocalDateTime creationTime;
     @Column(name = "message")
     private String message;
+
+    public Log(LocalDateTime creationTime, String message) {
+        this.creationTime = creationTime;
+        this.message = message;
+    }
 }
