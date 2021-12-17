@@ -37,7 +37,7 @@ public class AdminController {
     }
 
     @PutMapping("/moderating-feeders/save")
-    public void updateModeratingFeeders(@Valid @RequestParam(name = "moderated") List<ModeratingFeederDto> moderatedFeeders) {
+    public void updateModeratingFeeders(@Valid @RequestBody List<ModeratingFeederDto> moderatedFeeders) {
         feederService.updateFeedersStatuses(moderatedFeeders);
     }
     @GetMapping("/logs")

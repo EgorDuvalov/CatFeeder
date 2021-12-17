@@ -77,7 +77,7 @@ public class FeederService {
             logger.warn("Arrogant try to use feeder "+ feeder.getId() + "\n" + Arrays.toString(e.getStackTrace()));
             throw e;
         }
-        if (!feeder.getType().equals(Feeder.Type.TIMER)) {
+        if (feeder.getType().equals(Feeder.Type.TIMER)) {
             if (feeder.getSchedule() == null) {
                 ResponseStatusException e = new ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
