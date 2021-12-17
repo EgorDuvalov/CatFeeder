@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -54,6 +53,17 @@ public class FeederService {
         return feederMapper.mapToDto(feeder);
     }
 
+    public FeederDTO updateFeeder(Long userId, Long feederId, FeederDTO dto) {
+        User owner = userService.retrieveUser(userId);
+        Feeder toUpdate = retrieveFeeder(feederId);
+        feederMapper.updateFromDto(dto, toUpdate);
+        toUpdate = feederRepository.save(toUpdate);
+
+        logger.info(owner, format("Feeder %d updated successfully", feederId));
+        return feederMapper.mapToDto(toUpdate);
+    }
+
+
     public void setSchedule(Long userId, Long feederId, Long scheduleId) {
         User owner = userService.retrieveUser(userId);
         Feeder feeder = retrieveFeeder(feederId);
@@ -80,7 +90,7 @@ public class FeederService {
                     "Feeder should be accepted by admin before getting activated");
             logger.error(feeder.getUser(),
                 "Arrogant try to use feeder " + feeder.getId(),
-                    Arrays.toString(e.getStackTrace()));
+                e.getReason());
             throw e;
         }
         if (feeder.getType().equals(Feeder.Type.TIMER)) {
@@ -90,7 +100,7 @@ public class FeederService {
                         "Timer-based feeder requires schedule before getting activated");
                 logger.error(feeder.getUser(),
                     "Arrogant try to use timer-based feeder " + feeder.getId(),
-                    Arrays.toString(e.getStackTrace()));
+                    e.getReason());
                 throw e;
             }
         }
@@ -127,7 +137,7 @@ public class FeederService {
                     format("Feeder with id %d is not found", id));
             logger.error(null,
                 "Retrieve failed for feeder " + id,
-                Arrays.toString(e.getStackTrace()));
+                e.getReason());
             throw e;
         }
         return feeder.get();

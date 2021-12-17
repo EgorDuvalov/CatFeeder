@@ -15,9 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,9 +41,9 @@ public class LogService {
 		return logMapper.mapToDtoList(logs);
 	}
 
-	public String getStackTrace(Long logId) {
+	public String getReason(Long logId) {
 		Log log = retrieveLog(logId);
-		return log.getStackTrace();
+		return log.getReason();
 	}
 
 	@Scheduled(cron = "0 3 15 * *") //At 3:00 AM on 15th of every month

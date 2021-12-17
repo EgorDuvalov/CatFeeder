@@ -30,8 +30,7 @@ public class Log {
 
 	private String message;
 
-	@Column(name = "stack_trace")
-	private String stackTrace;
+	private String reason;
 
 	@Column(name = "created")
 	@CreationTimestamp

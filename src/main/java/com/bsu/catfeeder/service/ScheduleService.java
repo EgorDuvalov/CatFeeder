@@ -57,9 +57,14 @@ public class ScheduleService {
 	public Schedule retrieveSchedule(Long id) {
 		Optional<Schedule> schedule = scheduleRepository.findById(id);
 		if (schedule.isEmpty()) {
-			throw new ResponseStatusException(
+			ResponseStatusException e = new ResponseStatusException(
 				HttpStatus.NOT_FOUND,
 				format("Schedule with id %d is not found", id));
+
+			logger.error(null,
+				format("Schedule %d is not found", id),
+				e.getReason());
+			throw e;
 		}
 
 		return schedule.get();

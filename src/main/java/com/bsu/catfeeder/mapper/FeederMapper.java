@@ -5,6 +5,7 @@ import com.bsu.catfeeder.dto.FeederDTO;
 import com.bsu.catfeeder.entity.Feeder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
@@ -19,4 +20,8 @@ public interface FeederMapper {
 	@Mapping(target = "owner", source = "user.username")
 	@Mapping(target = "schedule", source = "schedule.name")
 	List<FeederDTO> mapToDtoList(List<Feeder> entities);
+
+	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "schedule", ignore = true)
+	void updateFromDto(FeederDTO dto, @MappingTarget Feeder feeder);
 }

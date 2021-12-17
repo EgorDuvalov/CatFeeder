@@ -21,16 +21,16 @@ public class Logger {
 		createLog(user, message, Status.WARN, null);
 	}
 
-	public void error(User user, String message, String stackTrace) {
-		createLog(user, message, Status.ERROR, stackTrace);
+	public void error(User user, String message, String reason) {
+		createLog(user, message, Status.ERROR, reason);
 	}
 
-	private void createLog(User user, String message, Status status, String stackTrace) {
+	private void createLog(User user, String message, Status status, String reason) {
 		Log log = new Log();
 		log.setUser(user);
 		log.setMessage(message);
 		log.setStatus(status);
-		log.setStackTrace(stackTrace);
+		log.setReason(reason);
 
 		logRepository.save(log);
 	}

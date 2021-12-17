@@ -44,9 +44,9 @@ public class AdminController {
         return logService.getAllLogs();
     }
 
-    @GetMapping("/logs/{logId}/stack-trace")
-    public String getStackTrace(@PathVariable Long logId) {
-        return logService.getStackTrace(logId);
+    @GetMapping("/logs/{logId}/reason")
+    public String getReason(@PathVariable Long logId) {
+        return logService.getReason(logId);
     }
 
     @GetMapping("/users")

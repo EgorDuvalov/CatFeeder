@@ -51,7 +51,7 @@ public class UserService {
 
             logger.error(null,
                 "Failed to create user",
-                Arrays.toString(e.getStackTrace()));
+                e.getReason());
             throw e;
         }
 
@@ -67,7 +67,8 @@ public class UserService {
                     HttpStatus.NOT_FOUND,
                     format("User with id %d doesn't exist", id));
 
-            logger.error(null, "Failed to delete user", Arrays.toString(e.getStackTrace()));
+            logger.error(null, "Failed to delete user",
+                e.getReason());
             throw e;
         }
 
@@ -84,7 +85,7 @@ public class UserService {
 
             logger.error(null,
                 "Retrieve attempt failed for user " + id,
-                Arrays.toString(e.getStackTrace()));
+                e.getReason());
             throw e;
         }
         return user.get();
@@ -98,7 +99,7 @@ public class UserService {
                     format("User with id %s doesn't exist", username));
             logger.error(null,
                 "Retrieve attempt failed for user " + username,
-                Arrays.toString(e.getStackTrace()));
+                e.getReason());
             throw e;
         }
         return user.get();

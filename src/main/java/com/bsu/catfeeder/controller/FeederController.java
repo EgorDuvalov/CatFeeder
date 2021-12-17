@@ -35,6 +35,11 @@ public class FeederController {
 		return feederService.addFeeder(userId, dto);
 	}
 
+	@PutMapping("/{feederId}")
+	public FeederDTO updateFeeder(@PathVariable Long userId, @PathVariable Long feederId, @RequestBody FeederDTO dto) {
+		return feederService.updateFeeder(userId, feederId, dto);
+	}
+
 	@DeleteMapping("/{feederId}")
 	public void deleteFeeder(@PathVariable Long userId, @PathVariable Long feederId) {
 		feederService.deleteFeeder(userId, feederId);
@@ -46,9 +51,9 @@ public class FeederController {
 		feederService.setSchedule(userId, feederId, scheduleId);
 	}
 
-	@PutMapping("/{feederId}")
+	@PutMapping("/{feederId}/activate")
 	private void activateFeeder(@PathVariable Long userId, @PathVariable Long feederId,
-								@RequestParam(name = "activate") boolean isActivated) {
+		@RequestParam(name = "activate") boolean isActivated) {
 		feederService.activateFeeder(userId, feederId, isActivated);
 	}
 }
