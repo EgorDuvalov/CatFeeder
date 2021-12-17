@@ -49,6 +49,16 @@ public class ScheduleService {
 		return result;
 	}
 
+	public ScheduleDTO updateSchedule(Long userId, Long scheduleId, ScheduleDTO dto) {
+		User owner = userService.retrieveUser(userId);
+		Schedule toUpdate = retrieveSchedule(scheduleId);
+		scheduleMapper.updateFromDto(dto, toUpdate);
+		toUpdate = scheduleRepository.save(toUpdate);
+
+		logger.info(owner, format("Schedule %d successfully updated", scheduleId));
+		return scheduleMapper.mapToDto(toUpdate);
+	}
+
 	public void deleteSchedule(Long userId, Long scheduleId) {
 		User user = userService.retrieveUser(userId);
 		retrieveSchedule(scheduleId);
