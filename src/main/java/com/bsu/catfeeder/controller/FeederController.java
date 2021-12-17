@@ -51,6 +51,11 @@ public class FeederController {
 		feederService.setSchedule(userId, feederId, scheduleId);
 	}
 
+	@PutMapping("/{feederId}/remove-schedule")
+	private void removeSchedule(@PathVariable Long userId, @PathVariable Long feederId) {
+		feederService.removeSchedule(userId, feederId);
+	}
+
 	@PutMapping("/{feederId}/activate")
 	private void activateFeeder(@PathVariable Long userId, @PathVariable Long feederId,
 		@RequestParam(name = "activate") boolean isActivated) {

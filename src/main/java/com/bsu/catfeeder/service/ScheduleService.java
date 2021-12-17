@@ -2,10 +2,12 @@ package com.bsu.catfeeder.service;
 
 import com.bsu.catfeeder.dto.CreateScheduleDTO;
 import com.bsu.catfeeder.dto.ScheduleDTO;
+import com.bsu.catfeeder.entity.Feeder;
 import com.bsu.catfeeder.entity.Schedule;
 import com.bsu.catfeeder.entity.User;
 import com.bsu.catfeeder.logger.Logger;
 import com.bsu.catfeeder.mapper.ScheduleMapper;
+import com.bsu.catfeeder.repository.FeederRepository;
 import com.bsu.catfeeder.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -24,6 +26,7 @@ import static java.lang.String.format;
 @RequiredArgsConstructor
 public class ScheduleService {
 	private final ScheduleRepository scheduleRepository;
+	private final FeederRepository feederRepository;
 	private final ScheduleMapper scheduleMapper;
 	private final UserService userService;
 	private final Logger logger;
@@ -50,6 +53,16 @@ public class ScheduleService {
 		User user = userService.retrieveUser(userId);
 		retrieveSchedule(scheduleId);
 
+		if (!getAssociatedFeeders(scheduleId).isEmpty()) {
+			logger.error(user,
+				format("Schedule with %d cannot be removed", scheduleId),
+				"Schedule is bound to feeders");
+
+			throw new ResponseStatusException(
+				HttpStatus.CONFLICT,
+				"Schedule cannot be removed as long as it's bound to feeders");
+		}
+
 		scheduleRepository.deleteById(scheduleId);
 		logger.info(user, "User deleted schedule " + scheduleId);
 	}
@@ -68,5 +81,9 @@ public class ScheduleService {
 		}
 
 		return schedule.get();
+	}
+
+	public List<Feeder> getAssociatedFeeders(Long scheduledId) {
+		return feederRepository.findAllByScheduleId(scheduledId);
 	}
 }

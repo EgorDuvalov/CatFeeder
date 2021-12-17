@@ -8,4 +8,6 @@ import java.util.List;
 public interface FeederRepository extends JpaRepository<Feeder, Long> {
 
 	List<Feeder> findAllByStatus(Feeder.Status status);
+
+	List<Feeder> findAllByScheduleId(Long scheduleId);
 }

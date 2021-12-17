@@ -74,6 +74,15 @@ public class FeederService {
         feederRepository.save(feeder);
     }
 
+    public void removeSchedule(Long userId, Long feederId) {
+        User owner = userService.retrieveUser(userId);
+        Feeder feeder = retrieveFeeder(feederId);
+        feeder.setSchedule(null);
+
+        feederRepository.save(feeder);
+        logger.info(owner, "Schedule has been removed from feeder " + feederId);
+    }
+
     public void activateFeeder(Long userId, Long feederId, boolean isActivated) {
         User owner = userService.retrieveUser(userId);
         Feeder feeder = retrieveFeeder(feederId);
