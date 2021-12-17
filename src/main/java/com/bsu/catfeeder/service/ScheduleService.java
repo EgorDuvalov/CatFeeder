@@ -4,10 +4,11 @@ import com.bsu.catfeeder.dto.CreateScheduleDTO;
 import com.bsu.catfeeder.dto.ScheduleDTO;
 import com.bsu.catfeeder.entity.Schedule;
 import com.bsu.catfeeder.entity.User;
+import com.bsu.catfeeder.logger.Logger;
 import com.bsu.catfeeder.mapper.ScheduleMapper;
 import com.bsu.catfeeder.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
+import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -35,20 +36,22 @@ public class ScheduleService {
 	}
 
 	public ScheduleDTO addSchedule(Long userId, CreateScheduleDTO dto) {
+		User user = userService.retrieveUser(userId);
 		Schedule schedule = scheduleMapper.mapToEntity(dto);
-		schedule.setUser(userService.retrieveUser(userId));
+		schedule.setUser(user);
 		schedule = scheduleRepository.save(schedule);
-		logger.info(format("User %d added new schedule", userId));
 
-		return scheduleMapper.mapToDto(schedule);
+		val result = scheduleMapper.mapToDto(schedule);
+		logger.info(user, "User added new schedule");
+		return result;
 	}
 
 	public void deleteSchedule(Long userId, Long scheduleId) {
-		userService.retrieveUser(userId);
+		User user = userService.retrieveUser(userId);
 		retrieveSchedule(scheduleId);
-		logger.info("User "+ userId + "deleted schedule "+ scheduleId);
 
 		scheduleRepository.deleteById(scheduleId);
+		logger.info(user, "User deleted schedule " + scheduleId);
 	}
 
 	public Schedule retrieveSchedule(Long id) {

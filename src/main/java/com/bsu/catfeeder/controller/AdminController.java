@@ -1,7 +1,7 @@
 package com.bsu.catfeeder.controller;
 
 import com.bsu.catfeeder.dto.CreateUserDTO;
-import com.bsu.catfeeder.dto.LogDto;
+import com.bsu.catfeeder.dto.LogDTO;
 import com.bsu.catfeeder.dto.ModeratingFeederDto;
 import com.bsu.catfeeder.entity.User;
 import com.bsu.catfeeder.service.FeederService;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -41,8 +40,13 @@ public class AdminController {
         feederService.updateFeedersStatuses(moderatedFeeders);
     }
     @GetMapping("/logs")
-    public List<LogDto> getLogs() {
+    public List<LogDTO> getLogs() {
         return logService.getAllLogs();
+    }
+
+    @GetMapping("/logs/{logId}/stack-trace")
+    public String getStackTrace(@PathVariable Long logId) {
+        return logService.getStackTrace(logId);
     }
 
     @GetMapping("/users")

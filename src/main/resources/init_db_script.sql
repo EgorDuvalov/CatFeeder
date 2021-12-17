@@ -30,7 +30,10 @@ create table feeders
 
 create table logs
 (
-    id serial primary key,
-    creation_time timestamp with time zone not null default LOCALTIMESTAMP,
-    message varchar(200) not null
+    id          serial primary key,
+    created     timestamp    not null,
+    message     varchar(200) not null,
+    stack_trace varchar(1000),
+    status      varchar(10)  not null,
+    user_id     bigint references users (id)
 );

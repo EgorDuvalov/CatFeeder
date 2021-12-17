@@ -40,7 +40,6 @@ public class Feeder {
 	@Column(name = "load")
 	private long actualLoad;
 
-	@EqualsAndHashCode.Exclude @ToString.Exclude
 	@OneToOne
 	@JoinColumn(name = "schedule_id")
 	private Schedule schedule;

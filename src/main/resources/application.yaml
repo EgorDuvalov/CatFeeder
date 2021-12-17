@@ -12,3 +12,7 @@ spring:
     url: jdbc:postgresql://localhost:5410/test-db
     username: user
     password: user
+
+logging:
+  expiration-time:
+    months: 1

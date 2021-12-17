@@ -5,10 +5,11 @@ import com.bsu.catfeeder.dto.FeederDTO;
 import com.bsu.catfeeder.dto.ModeratingFeederDto;
 import com.bsu.catfeeder.entity.Feeder;
 import com.bsu.catfeeder.entity.User;
+import com.bsu.catfeeder.logger.Logger;
 import com.bsu.catfeeder.mapper.FeederMapper;
 import com.bsu.catfeeder.repository.FeederRepository;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -43,29 +44,32 @@ public class FeederService {
     }
 
     public FeederDTO addFeeder(Long userId, CreateFeederDto dto) {
+        User owner = userService.retrieveUser(userId);
         Feeder feeder = feederMapper.mapToEntity(dto);
-        feeder.setUser(userService.retrieveUser(userId));
+        feeder.setUser(owner);
         feeder.setStatus(Feeder.Status.MODERATING);
         feeder = feederRepository.save(feeder);
-        logger.info("Feeder" + feeder + "is moderating" + ", user id " + userId);
+
+        logger.info(owner, "New feeder " + feeder.getId() + " requested");
         return feederMapper.mapToDto(feeder);
     }
 
     public void setSchedule(Long userId, Long feederId, Long scheduleId) {
-        userService.retrieveUser(userId);
+        User owner = userService.retrieveUser(userId);
         Feeder feeder = retrieveFeeder(feederId);
         feeder.setSchedule(scheduleService.retrieveSchedule(scheduleId));
-        logger.info("Schedule "+scheduleId+" is set for feeder" + feederId);
+
+        logger.info(owner, "Schedule " + scheduleId + " is set for feeder" + feederId);
         feederRepository.save(feeder);
     }
 
     public void activateFeeder(Long userId, Long feederId, boolean isActivated) {
-        userService.retrieveUser(userId);
+        User owner = userService.retrieveUser(userId);
         Feeder feeder = retrieveFeeder(feederId);
         checkBeforeActivation(feeder);
         feeder.setActive(isActivated);
 
-        logger.info(format("Feeder %d active param is set to %s", feederId, isActivated));
+        logger.info(owner, format("Feeder %d active param is set to %s", feederId, isActivated));
         feederRepository.save(feeder);
     }
 
@@ -74,7 +78,9 @@ public class FeederService {
             ResponseStatusException e = new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Feeder should be accepted by admin before getting activated");
-            logger.warn("Arrogant try to use feeder "+ feeder.getId() + "\n" + Arrays.toString(e.getStackTrace()));
+            logger.error(feeder.getUser(),
+                "Arrogant try to use feeder " + feeder.getId(),
+                    Arrays.toString(e.getStackTrace()));
             throw e;
         }
         if (feeder.getType().equals(Feeder.Type.TIMER)) {
@@ -82,16 +88,18 @@ public class FeederService {
                 ResponseStatusException e = new ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
                         "Timer-based feeder requires schedule before getting activated");
-                logger.warn("Arrogant try to use timer-based feeder "+ feeder.getId() + "\n" + Arrays.toString(e.getStackTrace()));
+                logger.error(feeder.getUser(),
+                    "Arrogant try to use timer-based feeder " + feeder.getId(),
+                    Arrays.toString(e.getStackTrace()));
                 throw e;
             }
         }
     }
 
     public void deleteFeeder(Long userId, Long feederId) {
-        userService.retrieveUser(userId);;//Just to check that user exists
+        User owner = userService.retrieveUser(userId);;//Just to check that user exists
         retrieveFeeder(feederId); //Just to check feeder exists
-        logger.info("User "+ feederId + " successfully deleted feeder" + feederId);
+        logger.info(owner, "User "+ feederId + " successfully deleted feeder" + feederId);
         feederRepository.deleteById(feederId);
     }
 
@@ -99,13 +107,14 @@ public class FeederService {
         for (ModeratingFeederDto moderated : moderatedFeeders) {
             Optional<Feeder> feeder = feederRepository.findById(moderated.getId());
             if (feeder.isEmpty()) {
-                logger.error(
+                logger.warn(null,
                         format("Error while updating feeders statuses. Feeder with id %d is not found", moderated.getId()));
             } else {
                 Feeder toUpdate = feeder.get();
                 toUpdate.setStatus(moderated.getStatus());
                 feederRepository.save(toUpdate);
-                logger.info("Feeder "+ toUpdate.getId() + " changed his status to "+ moderated.getStatus());
+                logger.info(toUpdate.getUser(),
+                    "Feeder " + toUpdate.getId() + " changed its status to " + moderated.getStatus());
             }
         }
     }
@@ -116,7 +125,9 @@ public class FeederService {
             ResponseStatusException e = new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     format("Feeder with id %d is not found", id));
-            logger.warn("Retrieve failed for feeder "+ id + "\n" + Arrays.toString(e.getStackTrace()));
+            logger.error(null,
+                "Retrieve failed for feeder " + id,
+                Arrays.toString(e.getStackTrace()));
             throw e;
         }
         return feeder.get();

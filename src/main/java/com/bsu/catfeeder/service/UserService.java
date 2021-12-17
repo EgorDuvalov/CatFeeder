@@ -2,10 +2,10 @@ package com.bsu.catfeeder.service;
 
 import com.bsu.catfeeder.dto.CreateUserDTO;
 import com.bsu.catfeeder.entity.User;
+import com.bsu.catfeeder.logger.Logger;
 import com.bsu.catfeeder.mapper.UserMapper;
 import com.bsu.catfeeder.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -30,11 +30,11 @@ public class UserService {
     public String login(String username) {
         User user = retrieveUser(username);
         if (user.getRole().equals(User.Role.ADMIN)) {
-            logger.info(format("Admin %s login", username));
+            logger.info(null, format("Admin %s login", username));
             return REDIRECT_ADMIN_URL;
         }
 
-        logger.info(format("User %s login", username));
+        logger.info(null, format("User %s login", username));
         return format(REDIRECT_CLIENT_URL, user.getId());
     }
 
@@ -45,15 +45,19 @@ public class UserService {
     @Transactional
     public void addUser(CreateUserDTO dto) {
         if (userRepository.existsByUsername(dto.getUsername())) {
-            ResponseStatusException e = new ResponseStatusException(HttpStatus.CONFLICT,
-                    format("User with username %s already exists", dto.getUsername()));
-            logger.warn("Creation attempt failed for" + dto.getUsername() +"\n"+ Arrays.toString(e.getStackTrace()));
+            ResponseStatusException e = new ResponseStatusException(
+                HttpStatus.CONFLICT,
+                format("User with username %s already exists", dto.getUsername()));
+
+            logger.error(null,
+                "Failed to create user",
+                Arrays.toString(e.getStackTrace()));
             throw e;
         }
 
         User user = userMapper.mapToEntity(dto);
         userRepository.save(user);
-        logger.info(format("Creation attempt successful for %s", dto.getUsername()));
+        logger.info(null, format("User %s added successfully", dto.getUsername()));
     }
 
     @Transactional
@@ -62,11 +66,13 @@ public class UserService {
             ResponseStatusException e = new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     format("User with id %d doesn't exist", id));
-            logger.warn("Delete attempt failed for" + id + "\n" + Arrays.toString(e.getStackTrace()));
+
+            logger.error(null, "Failed to delete user", Arrays.toString(e.getStackTrace()));
             throw e;
         }
-        logger.info("Delete attempt successful for" + id);
+
         userRepository.deleteById(id);
+        logger.info(null, format("User %d successfully deleted", id));
     }
 
     public User retrieveUser(Long id) {
@@ -75,10 +81,12 @@ public class UserService {
             ResponseStatusException e = new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     format("User with id %d doesn't exist", id));
-            logger.warn("Retrieve attempt failed for" + id +"\n"+ Arrays.toString(e.getStackTrace()));
+
+            logger.error(null,
+                "Retrieve attempt failed for user " + id,
+                Arrays.toString(e.getStackTrace()));
             throw e;
         }
-        logger.info("Retrieve attempt successful for" + id);
         return user.get();
     }
 
@@ -88,11 +96,11 @@ public class UserService {
             ResponseStatusException e = new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     format("User with id %s doesn't exist", username));
-            logger.warn("Retrieve attempt failed for" + username +"\n"+ Arrays.toString(e.getStackTrace()));
+            logger.error(null,
+                "Retrieve attempt failed for user " + username,
+                Arrays.toString(e.getStackTrace()));
             throw e;
         }
-
-        logger.info(format("Retrieve attempt successful for %s", username));
         return user.get();
     }
 }
