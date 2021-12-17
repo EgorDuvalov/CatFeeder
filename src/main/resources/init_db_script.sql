@@ -33,7 +33,7 @@ create table logs
     id          serial primary key,
     created     timestamp    not null,
     message     varchar(200) not null,
-    stack_trace varchar(1000),
+    reason varchar(100),
     status      varchar(10)  not null,
     user_id     bigint references users (id)
 );
