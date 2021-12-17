@@ -57,6 +57,7 @@ public class FeederService {
         User owner = userService.retrieveUser(userId);
         Feeder toUpdate = retrieveFeeder(feederId);
         feederMapper.updateFromDto(dto, toUpdate);
+        toUpdate.setStatus(Feeder.Status.MODERATING);
         toUpdate = feederRepository.save(toUpdate);
 
         logger.info(owner, format("Feeder %d updated successfully", feederId));

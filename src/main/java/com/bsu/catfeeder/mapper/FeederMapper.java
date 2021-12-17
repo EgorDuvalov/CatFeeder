@@ -22,6 +22,7 @@ public interface FeederMapper {
 	List<FeederDTO> mapToDtoList(List<Feeder> entities);
 
 	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "status", ignore = true)
 	@Mapping(target = "schedule", ignore = true)
 	void updateFromDto(FeederDTO dto, @MappingTarget Feeder feeder);
 }
