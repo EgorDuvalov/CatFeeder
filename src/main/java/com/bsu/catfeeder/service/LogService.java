@@ -46,7 +46,7 @@ public class LogService {
 		return log.getReason();
 	}
 
-	@Scheduled(cron = "0 3 15 * *") //At 3:00 AM on 15th of every month
+	@Scheduled(cron = "0 3 15 * * ?") //At 3:00 AM on 15th of every month
 	private void cleanUpOldLogs() {
 		LocalDate dateOfExpiry = LocalDate.now().minusMonths(monthsBeforeExpiry);
 
